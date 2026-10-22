@@ -38,7 +38,7 @@ jobs:
         run: composer update --no-install --no-scripts --no-interaction --prefer-dist --no-progress
       - name: Composer security advisory scan (required)
         working-directory: backend
-        run: composer audit --no-interaction
+        run: composer audit --locked --no-interaction
       - name: Check generated locks
         run: |
           test -s frontend/package-lock.json

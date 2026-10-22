@@ -2,7 +2,7 @@
 
 > **Project:** Community-driven Tree Social Network / Living Tree Atlas  
 > **Status:** Product specification and instructions for the GitHub-connected coding agent  
-> **Version:** 1.0 — 22 October 2026  
+> **Version:** 1.1 — 22 October 2026 (PHP2Shell security baseline)  
 > **Ownership:** User-controlled project; “TreeStory” is a **placeholder name**, not an approved final brand.  
 > **Instruction:** Read this entire file before inspecting, changing, generating, or deploying code.
 
@@ -29,6 +29,22 @@ You are the project's **senior full-stack engineer, GIS architect, security revi
 13. **Check official documentation** before selecting major package versions, relying on unusual hosting features, or giving production commands. Pin compatible dependency versions and commit lockfiles.
 14. **No fake success indicators:** do not fabricate users, trees, analytics, map points, API responses, screenshots, or production evidence. Labeled demo/seed data is allowed only in development and test environments.
 15. **Avoid overengineering.** Start with cPanel-compatible PHP/MySQL/static assets. No mandatory Redis, Docker, Kubernetes, Node production server, Python worker, PostGIS, WebSockets, or paid cloud dependency in the MVP.
+
+### Mandatory PHP runtime and dependency security gate — PHP2Shell (effective 22 October 2026)
+
+These requirements are **owner-mandated** and override any older, less restrictive PHP-version fallback guidance in this document. They apply to Phase 00 scaffolding, CI, local/preview environments, cPanel staging and production. Never deploy to an unverified runtime.
+
+1. **PHP branch is pinned to officially patched PHP 8.4.x, minimum 8.4.27.** Do not use PHP 8.4.0–8.4.26. A newer 8.4.x release is acceptable only after confirming it is an official patched release. PHP 8.2, 8.3 or 8.5 is **not** an automatic substitute for this project's owner-approved 8.4.x policy, even if another branch has security fixes.
+2. **Use Laravel 13** and compatible, actively maintained packages. Do not silently downgrade Laravel or use abandoned dependencies to accommodate an unsuitable cPanel host.
+3. **PHP2Shell prevention:** CVE-2026-109618 and CVE-2026-109619 are critical vulnerabilities fixed for the 8.4 branch in **PHP 8.4.27 (21 October 2026)**. Updating Laravel, adding WAF rules, or changing application code is **not** a replacement for a patched PHP runtime.
+4. **Verify BOTH independent runtimes:** check `php -v` / `PHP_VERSION` for the CLI used by Composer, cron and Artisan, and separately confirm the **actual web-serving PHP SAPI** / version for each cPanel web/API domain (Apache module, PHP-FPM, LiteSpeed, CGI, etc.). Web/CLI versions can differ; a PHP selector setting alone is not proof the active worker was restarted and patched. Never publish an unprotected permanent `phpinfo()` endpoint or expose PHP versions/secrets through public health responses.
+5. **Fail closed before deployment:** block CI/deployment if the selected runtime is outside `>=8.4.27 <8.5.0`, vendor patch status is unverified, required extensions are missing, or web and CLI checks disagree. Confirm provider-supplied security patch/update evidence. If the host cannot supply patched PHP 8.4.x, **do not deploy**; select an approved compatible host or await a host update.
+6. **Scan dependencies:** run `composer validate`, `composer audit`, PHP version checks, relevant PHP/Laravel security tests and ordinary feature/smoke tests in CI and before every authorized release. Remediate advisories by updating to compatible maintained versions and regenerating the real `composer.lock`; never bypass a failing audit to deploy.
+7. **Document security operating procedures:** keep `docs/security-and-privacy.md`, `docs/deployment-cpanel.md`, and `docs/progress.md` current with PHP2Shell CVE references, PHP/Composer upgrade steps, CLI/web verification, tested versions, patch status, audit output, unresolved advisories and a deployment `NO-GO` decision until host evidence is verified.
+8. **Never commit secrets:** credentials, production paths containing private user identifiers, `.env`, private backups and tokens stay outside Git and logs. Audit output must not disclose secrets.
+9. **Phase boundary remains:** only Phase 00 foundation and essential security repairs now. No social features, real account/database deployment, public data collection or Phase 01 until explicit owner approval.
+
+Official sources: https://www.php.net/archive/2026.php#2026-10-21-5 and https://www.php.net/releases/8_4_27.php. Security audits and patch-status checks are necessary but not evidence that an uninspected cPanel host is safe.
 
 ### Required format when completing a task
 
@@ -102,7 +118,7 @@ The initial deployment target is a **typical shared cPanel Linux hosting account
 | Forms | React Hook Form + Zod or equivalent | Reusable validation with server-side Laravel validation |
 | Routing | React Router | Shareable tree/profile/post/map URLs |
 | Android/iOS | Capacitor wrapping the same React web bundle | One frontend codebase; access camera/GPS/native capabilities |
-| Backend | Supported Laravel version, **prefer Laravel 13 if hosting has PHP 8.3+** | PHP API compatible with cPanel |
+| Backend | **Laravel 13 on verified PHP 8.4.27+ (8.4.x only)** | Security-gated PHP API compatible with qualifying cPanel hosts |
 | Database | MySQL 8-compatible relational schema | Likely available in cPanel; reliable associations |
 | API auth | Laravel Sanctum | Stateful cookie+CSRF for first-party web; revocable bearer tokens for native mobile |
 | GIS/map | Leaflet + configurable map tile provider | Low-cost web-capable interactive map |
@@ -122,7 +138,7 @@ The initial deployment target is a **typical shared cPanel Linux hosting account
 
 ### Minimum environment to verify in Phase 0
 
-- cPanel PHP version + required PHP extensions (Laravel 13 requires PHP 8.3+; fallback to a still-supported Laravel release only with recorded rationale and user approval if needed).
+- Confirm **both CLI and web-serving PHP are officially patched 8.4.27 or later within PHP 8.4.x**. Verify actual cPanel PHP SAPI, worker restart/active version, required Laravel 13 extensions and provider patch evidence; no older-PHP/Laravel downgrade fallback is permitted.
 - MySQL/MariaDB version, DB creation access, storage and backup limits.
 - Ability to set an API subdomain document root to Laravel **`backend/public`** while application code stays outside public web root.
 - Composer availability (or controlled local dependency build/upload workflow), SSH optionality, scheduled tasks, SMTP support, SSL and HTTPS.
@@ -453,7 +469,7 @@ Use `/sanctum/csrf-cookie` for same-first-party web SPA session bootstrap, per t
 - Branches: `feat/phase-01-ui-shell`, `feat/phase-02-auth`, `fix/location-privacy`, etc.
 - Conventional commit subjects where practical: `feat:`, `fix:`, `test:`, `docs:`, `chore:`.
 - Submit small PRs rather than monolithic unreviewable batches. Do not expose secrets through PR diffs, Actions logs or screenshots.
-- Add CI checks once scaffolding is ready: frontend install/lint/typecheck/test/build; backend install/lint/tests; use supported PHP/Node versions in CI. Never connect CI tests to production credentials.
+- Add CI checks once scaffolding is ready: frontend install/lint/typecheck/test/build; backend install/lint/tests, `composer audit`, and hard-fail PHP `8.4.27 <= version < 8.5.0` checks; separately verify actual cPanel web SAPI before deploying. Never connect CI tests to production credentials.
 - Keep `package-lock.json` and `composer.lock` committed for reproducible installs.
 - `README.md` must list local prerequisites, setup commands, test commands, project URLs and current implementation status. Avoid documentation that pretends features exist before they're coded.
 - `docs/decisions.md` should capture a date, decision, reason, rejected alternative and compatibility consequence for major changes.
@@ -482,9 +498,9 @@ Each phase has **acceptance criteria**. Do not start the next phase in the same 
 **Implement:**
 - Inspect the actual repository and identify existing code; do not overwrite it.
 - Create/normalize `README.md`, `docs/architecture.md`, `docs/decisions.md`, `docs/roadmap.md`, `docs/progress.md`, `.gitignore`, frontend/backend skeletons as appropriate.
-- Confirm or explicitly list unknown cPanel prerequisites: PHP, DB engine, document root, Composer/SSH, SSL, storage, cron, image extensions.
-- Record the React + Vite + Capacitor + Laravel/MySQL decision, with PHP-version fallback gate.
-- Set up a minimal runnable frontend placeholder, Laravel API health endpoint, local `.env.example`, and basic smoke checks **only when dependencies/runtime are available**.
+- Confirm or explicitly list unknown cPanel prerequisites: **patched PHP 8.4.27+ (8.4.x) independently for CLI and web SAPI**, DB engine, document root, Composer/SSH, SSL, storage, cron, image extensions, and provider security updates.
+- Record the React + Vite + Capacitor + **Laravel 13/MySQL on patched PHP 8.4.27+ (8.4.x)** decision. Unsuitable host runtime is a deployment blocker; do not downgrade PHP/Laravel.
+- Set up a minimal runnable frontend placeholder, Laravel 13 API health endpoint, local `.env.example`, PHP runtime security gate, `composer audit`, and basic smoke checks **only when dependencies/runtime are available**.
 - Do **not** build user accounts, tree registration, social features or full mobile apps yet.
 
 **Done when:** repo structure is understandable; basic local setup commands work or blockers are identified; backend and frontend skeletons remain deployable in principle; docs distinguish assumptions from verified host facts.
@@ -568,7 +584,7 @@ An alternate `app.example.com` frontend subdomain is acceptable. The Laravel sub
 
 ### Deployment preparation
 
-1. Check cPanel PHP compatibility and required extensions; database version; composer/SSH access; upload limits; writable storage paths; cron; SSL; docroot configuration.
+1. Verify actual patched **PHP 8.4.27+ (8.4.x) separately in CLI and each web-serving SAPI** (restart workers after provider upgrades); verify Laravel 13 compatibility, extensions, `composer audit` and security tests; database version; Composer/SSH access; upload limits; writable paths; cron; SSL; docroot. **Block deployment** if patched runtime cannot be supplied.
 2. Create staging first. Keep staging data separate from production; seed demo data in dev/staging only, never silently in production.
 3. Provision DB and least-privilege DB user, and `.env` stored outside public web root. Never commit `.env`.
 4. Build React locally or in trusted CI: `npm ci && npm run build`; upload **contents of `frontend/dist/`** to intended web root. Do not upload `node_modules`, source secrets, or expect Node to execute on the server.
@@ -599,7 +615,7 @@ Do not place this generic SPA rewrite in the Laravel API's `public/` directory; 
 ### Build environments
 
 - **Web:** build generated static assets; cPanel web server serves them.
-- **Backend:** supported PHP + MySQL on cPanel; production tasks via supported CLI/cron capabilities.
+- **Backend:** Laravel 13 on an officially patched PHP 8.4.27+ (8.4.x) runtime + MySQL on qualifying cPanel; production tasks via supported CLI/cron capabilities. Do not deploy to unsupported/unpatched PHP.
 - **Android:** Capacitor sync plus Android Studio/SDK or trusted Android CI; produce APK/AAB according to distribution method.
 - **iOS:** Xcode/macOS or approved macOS build infrastructure; code signing and app store procedures are separate from cPanel.
 - **SEO/social share previews:** a static React SPA alone may not give rich dynamic metadata to all crawlers. Plan public tree share-preview/meta route or approved pre-render strategy before marketing launch; do not assume it works automatically.
@@ -607,7 +623,8 @@ Do not place this generic SPA rewrite in the Laravel API's `public/` directory; 
 ### Release checklist
 
 - [ ] Domain/DNS/SSL verified (no invented production URLs)
-- [ ] Correct PHP/version/extensions and DB provisioned
+- [ ] Both actual CLI and web PHP runtimes verified as patched 8.4.27+ (8.4.x); Laravel 13 requirements and extensions checked; DB provisioned
+- [ ] `composer audit` and available PHP/Laravel security tests passed; provider web-PHP update evidence recorded; NO-GO on unpatched hosting
 - [ ] Laravel project + `.env` not web accessible
 - [ ] APP_DEBUG disabled; all cookies/tokens secure
 - [ ] DB/files backup performed and restore method checked

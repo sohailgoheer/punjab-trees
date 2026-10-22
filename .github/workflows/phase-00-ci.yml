@@ -1,5 +1,7 @@
 name: Phase 00 foundation and security checks
 
+# Retest after the real PHP 8.4.27 Composer lockfile was committed.
+
 on:
   push:
     paths:

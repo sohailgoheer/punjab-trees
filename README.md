@@ -15,32 +15,34 @@
 ## Prerequisites
 
 - Node.js 22.x (Vite requires at least Node 22.12 when using Node 22), npm.
-- PHP **8.3+ to run the provisional Laravel 13 scaffold**; Composer 2 and PHP extensions as required by Laravel.
+- **Officially patched PHP 8.4.27 or newer PHP 8.4.x** (both CLI and web PHP), Laravel 13, Composer 2 and required extensions. PHP2Shell CVE-2026-109618/CVE-2026-109619 are hard deployment blockers.
 - MySQL 8-compatible database for later phases (no DB is connected in Phase 00).
 - Local development does **not** need cPanel credentials.
 
-See [docs/deployment-cpanel.md](docs/deployment-cpanel.md) before selecting a host PHP/Laravel release.
+Before any PHP deployment, read [PHP2Shell security and upgrade procedure](docs/php-runtime-security.md) and [cPanel prerequisites](docs/deployment-cpanel.md). Actual cPanel host security remains unverified.
 
 ## React frontend — local or Codespaces
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm test
 npm run typecheck
 npm run build
 npm run dev -- --host 0.0.0.0
 ```
 
-Open local http://localhost:5173 or use the forwarded port 5173 URL in GitHub Codespaces. `npm install` should generate `package-lock.json`; commit this file after a real install. Do not fabricate a lockfile.
+Open local http://localhost:5173 or use the forwarded port 5173 URL in GitHub Codespaces. The real `frontend/package-lock.json` was generated and committed by a GitHub Actions registry-resolution run. Use `npm ci` for reproducible installs.
 
 ## Laravel backend — local or Codespaces
 
-The backend is a **source scaffold**, not a generated full Laravel installation. Its version is **conditional on verified cPanel PHP support**. On a compatible machine:
+The backend is a **source scaffold**, not deployed production PHP. Version requirements are **mandatory Laravel 13 and patched PHP >=8.4.27 <8.5.0**. On a compatible machine:
 
 ```bash
 cd backend
+php scripts/check-php-runtime.php
 composer install
+composer audit --no-interaction
 cp .env.example .env
 php artisan key:generate
 php artisan route:list --path=api
@@ -48,7 +50,7 @@ php artisan test
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 
-A successful boot should provide `GET /api/v1/health` returning JSON with `data.status = ok`. Never interpret an untested route file as proof the API is running. `composer install` should produce `composer.lock`; commit the verified lockfile before production deployment. Keep `.env` private. Never run migrations on production without explicit approval.
+A successful boot should provide `GET /api/v1/health` returning JSON with `data.status = ok`. Never interpret an untested route file as proof the API is running. `backend/composer.lock` has been generated/committed by real GitHub Actions registry resolution on PHP 8.4.27. The CLI check does not verify the separate cPanel web SAPI. Keep `.env` private. Never run migrations on production without explicit approval.
 
 ## Preview
 

@@ -11,7 +11,7 @@ Defined in `backend/routes/api.php` and registered through Laravel `bootstrap/ap
 ```
 
 - No credentials, DB metadata, hostname, version or secret should appear in the response.
-- This route is only operational when Composer dependencies are installed and Laravel actually boots.
+- This route is only operational when Composer dependencies are installed and Laravel actually boots on patched PHP 8.4.27+ (8.4.x). Unsupported web runtime returns sanitized HTTP 503 `{"data":{"status":"unavailable"}}`. This route-level check cannot replace patching PHP before deployment.
 - The GitHub Pages site **cannot execute** this endpoint.
 - A PHP syntax check does not prove API HTTP behavior. Run an actual Laravel feature test / request on a compatible runtime before marking it verified.
 

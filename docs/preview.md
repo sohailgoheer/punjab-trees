@@ -16,7 +16,7 @@ GitHub Pages uses the repository's existing `main` branch root publishing settin
 3. In its terminal:
    ```bash
    cd frontend
-   npm install
+   npm ci
    npm test
    npm run typecheck
    npm run dev -- --host 0.0.0.0
@@ -30,16 +30,18 @@ This is a **technical smoke test**, not a complete application and not a product
 
 Terminal 1 (React): `cd frontend && npm install && npm run dev -- --host 0.0.0.0` → port 5173.
 
-Terminal 2 (provisional Laravel, only with PHP 8.3+, Composer and required extensions):
+Terminal 2 (Laravel 13, ONLY with officially patched PHP 8.4.27+ within 8.4.x, Composer and required extensions):
 ```bash
 cd backend
+php scripts/check-php-runtime.php
 composer install
+composer audit --no-interaction
 cp .env.example .env
 php artisan key:generate
 php artisan route:list --path=api
 php artisan test
 php artisan serve --host=0.0.0.0 --port=8000
 ```
-Forward **port 8000** privately and visit `/api/v1/health`. No frontend API integration is attempted in Phase 00. Never expose your private `.env`, exact private coordinates or real credentials.
+Forward **port 8000** privately and visit `/api/v1/health`. This verifies only the Codespaces/local PHP web process, not the cPanel host. No frontend API integration is attempted in Phase 00. Never expose your private `.env`, exact private coordinates or real credentials.
 
 **GitHub Pages cannot host PHP, Laravel, MySQL or a working full-stack app.** Real staging preview belongs on an approved PHP host with separately configured frontend and API; that is reserved for Phase 09.

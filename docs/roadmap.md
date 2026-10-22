@@ -12,8 +12,10 @@ Acceptance checklist:
 - [x] Add provisional Laravel API health source, PHP manifest and test scaffold.
 - [x] Record cPanel host requirements and explicit unknowns (no hosting credentials provided).
 - [x] Document architecture, security boundaries, local setup and preview method.
-- [ ] Confirm actual cPanel PHP/extensions, MySQL/MariaDB, document root, Composer/SSH, SSL, storage, backups, cron and limits.
-- [ ] Commit dependency lockfiles after a verified package install (no fabricated lockfiles).
+- [ ] Confirm actual cPanel **CLI and web SAPI independently** run officially patched PHP 8.4.27+ (8.4.x), required Laravel 13 extensions, provider patch evidence, MySQL/MariaDB, docroot, Composer/SSH, SSL, storage, backups, cron and limits; NO-GO until verified.
+- [x] Generate and commit genuine npm/Composer lockfiles from registry-backed GitHub Actions.
+- [x] Add PHP2Shell CLI/web runtime gate, PHP policy unit tests, and Composer audit in CI.
+- [ ] Verify patched runtime on actual cPanel independently for CLI and web SAPI.
 - [ ] Verify app on a real Codespaces/local runtime and later an explicitly approved staging server.
 
 **Stop:** Do not implement Phase 01 without approval.

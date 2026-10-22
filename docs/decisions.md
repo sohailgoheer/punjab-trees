@@ -10,11 +10,11 @@
 **Consequence:** Mobile builds are separate from cPanel. A web bundle cannot become an APK/IPA solely by uploading to hosting.
 
 ## ADR-002 — 2026-10-22: Laravel version is host-gated
-**Decision:** Provisional Laravel 13-compatible source scaffold (`backend/composer.json`, PHP >=8.3). Do **not** deploy until cPanel runtime is checked.
+**Decision (revised by owner):** Laravel 13 and officially patched PHP 8.4.27+ (8.4.x only) are mandatory for CLI and web SAPI. Do **not** deploy until both are verified.
 
-**Why:** Actual cPanel PHP/extensions, Composer and API docroot are not verified. Laravel 13 requires PHP 8.3+. A supported Laravel 12 fallback requires separate owner approval if PHP 8.2 is found.
+**Why:** Official PHP security release on 21 October 2026 fixes PHP2Shell CVE-2026-109618/CVE-2026-109619 in 8.4.27; actual cPanel runtime is unverified. PHP 8.2/8.3 or Laravel 12 fallback is **not authorized**.
 
-**Consequence:** Composer dependencies/health tests can be checked in CI with PHP 8.4; cPanel compatibility itself remains unknown.
+**Consequence:** Composer now requires `>=8.4.27 <8.5.0` with Laravel 13, PHP2Shell checks run in CI. Provider's actual CLI/web PHP compatibility is unknown and remains a NO-GO until verified.
 
 ## ADR-003 — 2026-10-22: Preserve legacy root demo
 **Decision:** Keep the existing four root demo files unchanged. Build the future product under `frontend/` and `backend/`.
@@ -36,3 +36,11 @@
 **Why:** GitHub Pages cannot execute Laravel/PHP or MySQL; hosting has not been authorized. CI must not touch real DBs or share secrets.
 
 **Consequence:** Use Codespaces forwarded ports or local development for React + API testing. GitHub Pages preview at `preview/phase-00/` is a standalone static status page, **not** Vite-compiled React.
+
+## ADR-006 — 2026-10-22: PHP2Shell / dependency audit release gate
+
+**Decision:** Require verified patched PHP 8.4.27+ (8.4.x only) for both web and CLI plus Laravel 13, maintained locked dependencies, `composer audit`, PHP runtime-policy unit tests, and documented host update procedure. No PHP/Laravel downgrade.
+
+**Why:** Two critical PHP runtime vulnerabilities (CVE-2026-109618 and CVE-2026-109619) were patched in PHP 8.4.27 on 21 October 2026. PHP-level exploitation can occur before application code executes, so an app-level check does not replace upgrading.
+
+**Consequence:** GitHub Actions validates its own runtime, and cPanel deployment remains NO-GO until independent host patch evidence. See `docs/php-runtime-security.md`.

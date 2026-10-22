@@ -16,7 +16,7 @@ Web browser (React / TS / Vite static build)        Future Android / iOS (Capaci
                     Controlled file/media storage
 ```
 
-`*` **Laravel 13 is conditional:** only use if the target cPanel host supports PHP >=8.3 and the required extensions; otherwise assess a supported Laravel 12 fallback with owner approval and retesting. No production version is finalized from a guess.
+`*` **Laravel 13 on an officially patched PHP 8.4.27+ (8.4.x) is mandatory.** Independently verify real web PHP and CLI PHP on cPanel before deployment. Host lacking this version is a NO-GO (no Laravel 12 fallback). See [PHP2Shell runbook](php-runtime-security.md).
 
 - Hosting: cPanel Apache serves the **built** React static assets. No Node server runs in production.
 - API: Laravel application files stay outside public web root; only `backend/public` is publicly served by an API subdomain.
@@ -25,7 +25,7 @@ Web browser (React / TS / Vite static build)        Future Android / iOS (Capaci
 - Mobile: Capacitor wraps the **same** React code, added in Phase 08, not Phase 00. Native bundles need separate platform builds.
 - Auth: Sanctum stateful cookies with CSRF for first-party website; secure revocable native tokens for future apps.
 - Storage: Laravel filesystem, safe image re-encoding and EXIF GPS removal are future phases; no user media implemented yet.
-- Testing: frontend static smoke tests, typed build; backend Laravel API health test; database/auth tests only when their phase is implemented.
+- Testing: frontend smoke tests and typed build; PHP2Shell runtime policy tests, Laravel API health tests, mandatory `composer audit` and CI HTTP smoke on patched PHP 8.4.x. The host web SAPI is not verified by CI.
 
 ## Canonical data rules
 

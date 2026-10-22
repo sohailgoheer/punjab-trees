@@ -6,7 +6,7 @@
 
 | Item | Requirement or consideration | Verified? |
 |---|---|---|
-| PHP version | Laravel 13 requires PHP >=8.3; if PHP 8.2, assess supported Laravel 12 with user approval | No |
+| **Mandatory PHP** | **Officially patched PHP 8.4.27+ (8.4.x only)** in both **CLI and real web-serving SAPI**, Laravel 13. PHP2Shell: CVE-2026-109618/CVE-2026-109619; NO-GO if unknown/unpatched. | **No — deployment blocker** |
 | PHP extensions | Verify required Laravel extensions, including Ctype, cURL, DOM, Fileinfo, Filter, Hash, Mbstring, OpenSSL, PCRE, PDO, Session, Tokenizer, XML | No |
 | Image extensions | GD or Imagick for safe re-encoding and thumbnail generation | No |
 | Database | MySQL 8-compatible MySQL or MariaDB version, user/grants, storage quotas, backup/restore access | No |
@@ -19,7 +19,18 @@
 | Upload/storage limits | upload_max_filesize, post_max_size, max_execution_time, memory_limit, CPU and bandwidth | No |
 | Cron & jobs | Cron permitted; no always-on workers assumed | No |
 | Backups | DB/file backup ownership, frequency, full restore and rollback tested | No |
-| Security | Environment variables and secrets kept outside public web root; WAF/rate limiting where supported | No |
+| Security | Clean `composer audit`, independently verified patched host PHP, secrets outside public root, WAF/rate limiting where supported | Host: No |
+
+## Mandatory patched PHP deployment gate
+
+1. **Provider evidence:** obtain the effective patched PHP 8.4.27 or newer **8.4.x** version for each API domain and its web-serving handler (PHP-FPM/LSAPI/CGI/Apache), not just MultiPHP selector setting; verify PHP workers were restarted after upgrading.
+2. **CLI check:** run `php -v` and `php scripts/check-php-runtime.php` using the same PHP binary as Composer/Artisan/cron. Confirm extensions with `php -m`.
+3. **Separate web check:** inspect actual PHP worker version via cPanel/provider evidence or a temporary **access-restricted, nonproduction** diagnostic executing inside the web SAPI. Do not publish `phpinfo()` or credentials. Remove temporary diagnostics.
+4. **Dependency/security:** verify Laravel 13 on the approved runtime; run `composer validate --strict --no-check-publish`, `composer install`, `composer audit`, PHP policy tests and an authorized HTTP smoke check.
+5. **Hard NO-GO:** if unpatched/mismatched/unknown CLI or web PHP, missing extensions, security advisories or unsafe public docroot, do not deploy. No Laravel downgrade and no mitigation-only workaround.
+6. Record the checked versions, vendor patch status and verification date in private operations records, and summarize the verified/no-go status without private host details in `docs/progress.md`.
+
+Details and secure update steps: [PHP2Shell security runbook](php-runtime-security.md).
 
 ## Future topology (placeholder hostnames only)
 
@@ -33,7 +44,7 @@
 
 ## Release strategy (later phase only)
 
-1. Obtain real cPanel capabilities, choose compatible PHP/Laravel versions and request explicit approval.
+1. Obtain cPanel capabilities and **prove PHP 8.4.27+ (8.4.x) in both CLI and web SAPI**, Laravel 13 and clean security audit, then request explicit staging/production approval.
 2. Build in CI/local runtime, commit verified npm/composer lockfiles, run suites.
 3. Provision isolated staging, confirm HTTPS/docroots, database and storage boundaries.
 4. Backup, deploy static frontend and Laravel API safely, health check and run authorized migrations.

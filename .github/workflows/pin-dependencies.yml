@@ -1,0 +1,48 @@
+name: Pin Phase 00 dependency locks
+
+# One-time guarded automation: generates npm/Composer lockfiles from the
+# actual registries. Never fabricates package checksums or writes secrets.
+on:
+  push:
+    paths:
+      - '.github/workflows/pin-dependencies.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create-lockfiles:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate npm lockfile from registry
+        working-directory: frontend
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, xml, curl, fileinfo, pdo_mysql, openssl
+          tools: composer:v2
+      - name: Generate Composer lockfile against PHP 8.3 platform
+        working-directory: backend
+        run: composer update --no-install --no-scripts --no-interaction --prefer-dist --no-progress
+      - name: Check generated lockfiles
+        run: |
+          test -s frontend/package-lock.json
+          test -s backend/composer.lock
+          node -e "const p=require('./frontend/package-lock.json'); if(p.name!=='treestory-web') process.exit(1)"
+          cd backend && composer validate --no-check-publish && cd ..
+      - name: Commit ONLY the two generated lockfiles
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- frontend/package-lock.json backend/composer.lock
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: lock verified Phase 00 npm and Composer dependencies'
+            git push origin HEAD:main
+          fi

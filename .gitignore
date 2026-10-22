@@ -1,0 +1,33 @@
+# Environment: local secrets must never enter Git
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Web dependencies and generated bundles
+**/node_modules/
+**/dist/
+**/.vite/
+**/coverage/
+**/.cache/
+*.tsbuildinfo
+
+# Laravel dependencies, keys, logs, caches
+backend/vendor/
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+!backend/bootstrap/cache/.gitkeep
+backend/database/*.sqlite
+backend/database/*.sqlite-*
+
+# Local machine files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

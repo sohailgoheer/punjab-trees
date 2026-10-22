@@ -1,0 +1,66 @@
+name: Phase 00 foundation checks
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/phase-00-ci.yml'
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/phase-00-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: React foundation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned dependencies (lockfile pending)
+        run: npm install --no-audit --no-fund
+      - name: Node smoke tests
+        run: npm test
+      - name: Type check
+        run: npm run typecheck
+      - name: Production build
+        run: npm run build
+
+  backend:
+    name: Laravel health scaffold
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, xml, curl, fileinfo, pdo_mysql, openssl
+          tools: composer:v2
+      - name: Composer manifest validation
+        run: composer validate --no-check-publish
+      - name: Install provisional Laravel dependencies (lockfile pending)
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: PHP syntax check
+        run: |
+          php -l artisan
+          php -l bootstrap/app.php
+          php -l routes/api.php
+          php -l public/index.php
+      - name: Laravel route check
+        run: php artisan route:list --path=api
+      - name: Health feature test
+        run: php artisan test

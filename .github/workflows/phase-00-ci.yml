@@ -1,4 +1,4 @@
-name: Phase 00 foundation checks
+name: Phase 00 foundation and security checks
 
 on:
   push:
@@ -28,8 +28,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install pinned dependencies (lockfile pending)
-        run: npm install --no-audit --no-fund
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
       - name: Node smoke tests
         run: npm test
       - name: Type check
@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
   backend:
-    name: Laravel health scaffold
+    name: Patched PHP 8.4 / Laravel 13
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,17 +50,41 @@ jobs:
           php-version: '8.4'
           extensions: mbstring, dom, xml, curl, fileinfo, pdo_mysql, openssl
           tools: composer:v2
-      - name: Composer manifest validation
-        run: composer validate --no-check-publish
-      - name: Install provisional Laravel dependencies (lockfile pending)
+      - name: Fail closed on unpatched CLI PHP
+        run: |
+          php -v
+          php scripts/check-php-runtime.php
+      - name: Validate Composer manifest and locked dependencies
+        run: composer validate --no-check-publish --strict
+      - name: Install locked dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: PHP syntax check
+      - name: Security advisory scan (required)
+        run: composer audit --no-interaction
+      - name: PHP syntax and security policy
         run: |
           php -l artisan
           php -l bootstrap/app.php
+          php -l app/Support/PhpRuntimePolicy.php
+          php -l scripts/check-php-runtime.php
           php -l routes/api.php
           php -l public/index.php
-      - name: Laravel route check
+          php -l tests/Unit/PhpRuntimePolicyTest.php
+      - name: API route smoke check
         run: php artisan route:list --path=api
-      - name: Health feature test
+      - name: PHPUnit / Laravel tests
         run: php artisan test
+      - name: HTTP smoke check on CI web SAPI (NOT cPanel proof)
+        run: |
+          php artisan serve --host=127.0.0.1 --port=8013 >/tmp/treestory-serve.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 20); do
+            if curl -fsS --max-time 2 -H 'Accept: application/json' http://127.0.0.1:8013/api/v1/health | grep -q '"status":"ok"'; then
+              echo 'HTTP smoke PASS (GitHub runner only; host web SAPI still unverified)'
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'HTTP smoke FAILED'
+          cat /tmp/treestory-serve.log
+          exit 1

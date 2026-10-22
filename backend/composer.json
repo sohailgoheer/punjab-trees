@@ -4,7 +4,7 @@
   "description": "Conditional Laravel 13 API foundation for TreeStory Phase 00",
   "license": "MIT",
   "require": {
-    "php": "^8.3",
+    "php": ">=8.4.27 <8.5.0",
     "laravel/framework": "^13.17"
   },
   "require-dev": {
@@ -32,7 +32,7 @@
     "optimize-autoloader": true,
     "sort-packages": true,
     "platform": {
-      "php": "8.3.0"
+      "php": "8.4.27"
     }
   },
   "minimum-stability": "stable",

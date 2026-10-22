@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#176B4D">
+  <meta name="description" content="TreeStory Phase 00 architecture foundation status — static preview only.">
+  <title>TreeStory — Phase 00 Preview</title>
+  <style>
+    :root { font-family: system-ui,-apple-system,'Segoe UI',sans-serif; color:#17221C;background:#FAFBF8; }
+    * {box-sizing:border-box}
+    body {margin:0}
+    header,main,footer{width:min(1080px,calc(100% - 40px));margin-inline:auto}
+    header{padding:22px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #deebdd}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
+    .icon{background:#176B4D;color:white;padding:9px;border-radius:12px}
+    .pill{border-radius:99px;background:#EAF4EE;color:#176B4D;padding:9px 14px;font-weight:700;font-size:12px}
+    main{padding:32px 0 65px}
+    .hero{border-radius:24px;background:linear-gradient(110deg,#113e2a,#237b51);color:white;padding:clamp(30px,6vw,68px)}
+    .label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#aedbb4}
+    h1{font:normal clamp(42px,6vw,70px)/1.1 Georgia,serif;letter-spacing:-2px;margin:18px 0}
+    h1 em{color:#b7dea7}
+    p{line-height:1.75;color:#647067}
+    .hero p{color:#e1f3e5;max-width:650px}
+    .warn{margin-top:27px;background:#ffffff16;border-left:3px solid #b7dea7;padding:14px 18px;max-width:750px;color:#fff;font-size:13px}
+    h2{font:normal 32px Georgia,serif;margin:35px 0 17px}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    .card{border:1px solid #e1eae0;border-radius:18px;background:white;padding:25px}
+    .card strong{display:block;margin:13px 0 7px;font-size:17px}
+    .card p{margin:0;font-size:14px}
+    a{color:#176B4D;font-weight:700}
+    a:focus-visible{outline:3px solid #176B4D;outline-offset:3px}
+    .links{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+    .links a{border-radius:12px;background:#EAF4EE;padding:13px 18px}
+    footer{padding:25px 0;border-top:1px solid #dbe6db;color:#647067;font-size:13px}
+    @media(max-width:700px){.cards{grid-template-columns:1fr}header{flex-wrap:wrap}.hero{padding:30px 25px}}
+  </style>
+</head>
+<body>
+<header><div class="brand"><span class="icon" aria-hidden="true">🌳</span> TreeStory</div><span class="pill">Phase 00 · Static preview</span></header>
+<main>
+  <div class="hero">
+    <div class="label">Engineering foundation only</div>
+    <h1>One tree.<br><em>A lifetime of stories.</em></h1>
+    <p>We're preparing a safe, cPanel-compatible home for real trees and their dated growth photos. The web, API and mobile architecture is taking shape in GitHub.</p>
+    <div class="warn"><strong>What you're seeing:</strong> a standalone static GitHub Pages status preview. This is NOT the React build, Laravel API or an operational social network. No real trees, user accounts, GPS uploads or database are running here.</div>
+  </div>
+  <h2>What the project foundation covers</h2>
+  <div class="cards">
+    <article class="card"><div aria-hidden="true">🖥️</div><strong>Web foundation</strong><p>React + TypeScript + Vite source, intended for a static cPanel/Apache build.</p></article>
+    <article class="card"><div aria-hidden="true">🔐</div><strong>API foundation</strong><p>Conditional Laravel source scaffold, with a simple health route and cPanel public-root rules.</p></article>
+    <article class="card"><div aria-hidden="true">🌱</div><strong>Tree identity first</strong><p>One real tree will have one permanent record and many observed photo updates in later phases.</p></article>
+  </div>
+  <div class="links">
+    <a href="../../">Existing HTML demo ↗</a>
+    <a href="https://github.com/sohailgoheer/punjab-trees">GitHub repository ↗</a>
+  </div>
+</main>
+<footer>TreeStory is a placeholder brand. No real user data or production access is connected. Next feature phase requires the owner's approval.</footer>
+</body>
+</html>

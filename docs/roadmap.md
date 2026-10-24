@@ -21,7 +21,17 @@ Acceptance checklist:
 **Stop:** Do not implement Phase 01 without approval.
 
 ## Phase 01 — Visual design and social dashboard (mock data)
-**Status:** NOT STARTED for the new React application. Existing root HTML is only a separate legacy proof of concept.
+**Status:** IMPLEMENTED ON FEATURE BRANCH, verification and publishing tracked in `docs/progress.md`.
+
+- [x] Responsive 3-column desktop social shell and compact 5-tab mobile navigation.
+- [x] Original visual system in documented green tokens and Lucide React.
+- [x] Home, Tree Profile, dated Post Detail, Add Tree + Growth Update composer, illustrative Explore Map, User Profile, Notifications and 404 views.
+- [x] Shared strictly typed fictional tree records, stable public IDs, author attribution, separate observed/published dates, no exact location.
+- [x] Working demo controls: tree follow, post like/save/share, preview comment, filters, load more, local form preview, notification read.
+- [x] GitHub Pages-safe hash navigation and scoped Vite bundle preview build workflow.
+- [ ] Final merge, CI and live Pages verification: record the actual outcome in progress before marking full phase completion.
+
+**Not implemented:** auth, Laravel/MySQL integration, real upload/GPS map, production deployment. Phase 02 awaits explicit owner approval.
 
 ## Phase 02 — Database foundations and real authentication
 **Status:** NOT STARTED.

@@ -44,3 +44,13 @@
 **Why:** Two critical PHP runtime vulnerabilities (CVE-2026-109618 and CVE-2026-109619) were patched in PHP 8.4.27 on 21 October 2026. PHP-level exploitation can occur before application code executes, so an app-level check does not replace upgrading.
 
 **Consequence:** GitHub Actions validates its own runtime, and cPanel deployment remains NO-GO until independent host patch evidence. See `docs/php-runtime-security.md`.
+
+## ADR-008 — 2026-10-24: Phase 01 social UI mock and Pages-safe routing
+
+**Decision:** React 19/TypeScript/Vite with React Router's `HashRouter` for a safe nested GitHub Pages frontend preview under `/preview/phase-01/`. Use Lucide React, centralized CSS tokens and consistent typed fictional fixture content. Temporary UI state never becomes durable storage.
+
+**Why:** The owner approved a navigable dashboard but explicitly prohibited real accounts, uploads, databases, backend or GPS. Hash navigation works on static host deep links without rewriting the existing GitHub Pages configuration.
+
+**Rejected for Phase 01:** copying Facebook's visual assets, using real or exact residential GIS points, storing unprocessed camera files, choosing backend/Capacitor versions prematurely, or deploying to unverified cPanel.
+
+**Consequence:** A successful Vite build is publicly previewable as static files but is NOT a real Laravel web app. Maintain the existing root demo, the Phase 00 static page, and the PHP 8.4.27+/Laravel 13 security gate unchanged. Reconsider browser-style URLs only after an approved cPanel staging rewrite is tested.

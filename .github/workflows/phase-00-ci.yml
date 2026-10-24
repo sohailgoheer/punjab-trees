@@ -71,10 +71,16 @@ jobs:
           php -l routes/api.php
           php -l public/index.php
           php -l tests/Unit/PhpRuntimePolicyTest.php
+      - name: Prepare isolated temporary CI configuration
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force --no-interaction
       - name: API route smoke check
         run: php artisan route:list --path=api
-      - name: PHPUnit / Laravel tests
-        run: php artisan test --display-warnings --fail-on-warning
+      - name: Laravel tests
+        run: php artisan test --display-warnings
+      - name: Strict PHPUnit gate (warnings/deprecations fail the build)
+        run: ./vendor/bin/phpunit --display-warnings --fail-on-warning --fail-on-deprecation
       - name: HTTP smoke check on CI web SAPI (NOT cPanel proof)
         run: |
           php artisan serve --host=127.0.0.1 --port=8013 >/tmp/treestory-serve.log 2>&1 &

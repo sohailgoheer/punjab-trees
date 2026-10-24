@@ -74,7 +74,7 @@ jobs:
       - name: API route smoke check
         run: php artisan route:list --path=api
       - name: PHPUnit / Laravel tests
-        run: php artisan test
+        run: php artisan test --display-warnings --fail-on-warning
       - name: HTTP smoke check on CI web SAPI (NOT cPanel proof)
         run: |
           php artisan serve --host=127.0.0.1 --port=8013 >/tmp/treestory-serve.log 2>&1 &

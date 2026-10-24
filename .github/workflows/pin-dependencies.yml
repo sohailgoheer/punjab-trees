@@ -4,10 +4,6 @@ name: Pin Phase 00 dependency locks
 # registry resolution. The PHP baseline blocks insecure runtimes and audits
 # before a lockfile may be committed.
 on:
-  push:
-    paths:
-      - '.github/workflows/pin-dependencies.yml'
-      - 'backend/composer.json'
   workflow_dispatch:
 
 permissions:
@@ -15,13 +11,14 @@ permissions:
 
 jobs:
   create-lockfiles:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' # explicit manual action; never update lockfiles on normal pushes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
+          package-manager-cache: false
       - name: Generate npm lockfile from registry
         working-directory: frontend
         run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund

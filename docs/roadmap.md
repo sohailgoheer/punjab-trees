@@ -21,7 +21,7 @@ Acceptance checklist:
 **Stop:** Do not implement Phase 01 without approval.
 
 ## Phase 01 — Visual design and social dashboard (mock data)
-**Status:** IMPLEMENTED ON FEATURE BRANCH, verification and publishing tracked in `docs/progress.md`.
+**Status:** COMPLETE for approved Phase 01 UI-only scope. Tested, PR #1 merged, GitHub Pages static preview deployed. Phase 02 NOT STARTED.
 
 - [x] Responsive 3-column desktop social shell and compact 5-tab mobile navigation.
 - [x] Original visual system in documented green tokens and Lucide React.
@@ -29,7 +29,7 @@ Acceptance checklist:
 - [x] Shared strictly typed fictional tree records, stable public IDs, author attribution, separate observed/published dates, no exact location.
 - [x] Working demo controls: tree follow, post like/save/share, preview comment, filters, load more, local form preview, notification read.
 - [x] GitHub Pages-safe hash navigation and scoped Vite bundle preview build workflow.
-- [ ] Final merge, CI and live Pages verification: record the actual outcome in progress before marking full phase completion.
+- [x] Merged PR #1 after passing required frontend + PHP security CI. GitHub Pages deployment workflow succeeded at the compiled Phase 01 preview path (browser HTTP/visual inspection remains a noted limitation).
 
 **Not implemented:** auth, Laravel/MySQL integration, real upload/GPS map, production deployment. Phase 02 awaits explicit owner approval.
 

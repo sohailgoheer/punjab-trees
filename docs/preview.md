@@ -55,7 +55,7 @@ Official reference: https://docs.github.com/en/pages/getting-started-with-github
 
 ## Phase 01 — actual compiled React social dashboard
 
-**Intended GitHub Pages URL:** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/
+**GitHub Pages URL (successful deploy workflow [40089875981](https://github.com/sohailgoheer/punjab-trees/actions/runs/40089875981)):** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/
 
 This folder contains **Vite-built React production assets**, unlike the Phase 00 standalone static information page. No PHP backend is involved. It uses React Router's hash paths so its interactive screens load and refresh correctly in GitHub Pages:
 
@@ -81,3 +81,5 @@ npm run dev -- --host 0.0.0.0
 ```
 
 **GitHub Pages is public, read-only hosting**. Phase 01 social actions are transient React state, with no authentication, uploads, GPS, backend API or persistence. The photo stock assets are retrieved over HTTPS from Unsplash when available. Do not mistake the Pages demo for the real deployment to future cPanel hosting.
+
+**Phase 01 publication result (2026-10-24):** PR #1 merged, GitHub Pages deployment reported **success**, compiled React HTML and CSS/JS were verified in main. Independent external HTTP retrieval was unavailable in the assistant's environment, so the user should inspect the URL in Chrome to confirm their device renders the final CSS/photos. Existing GitHub Pages root and Phase 00 static previews remain unchanged.

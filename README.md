@@ -60,7 +60,7 @@ A successful boot should provide `GET /api/v1/health` returning JSON with `data.
 
 - **Existing legacy static concept:** https://sohailgoheer.github.io/punjab-trees/
 - **Phase 00 static information preview (if GitHub Pages deployment succeeds):** https://sohailgoheer.github.io/punjab-trees/preview/phase-00/
-- **Phase 01 React frontend:** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/ (once the successful merge deployment is verified), or Vite dev preview via Codespaces forwarded port 5173.
+- **Phase 01 React frontend:** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/ (GitHub Pages deployment succeeded 2026-10-24; real-device inspection pending), or Vite dev preview via Codespaces forwarded port 5173.
 - **Complete React + Laravel application:** only through an authorized Codespaces/local frontend + PHP API pair, or later approved cPanel staging. GitHub Pages **cannot run PHP or MySQL**.
 
 See [docs/preview.md](docs/preview.md). No cPanel deployment, production credentials, database migrations or live user features are part of this phase.
@@ -72,4 +72,4 @@ See [docs/preview.md](docs/preview.md). No cPanel deployment, production credent
 - [Architecture](docs/architecture.md) | [Decisions](docs/decisions.md)
 - [Safe hosting and release checklist](docs/deployment-cpanel.md)
 
-**Phase 01 was explicitly approved. Do not start Phase 02 without the owner's approval.**
+**Phase 01 frontend is approved, implemented, tested and statically published. Do not start Phase 02 without the owner's explicit new approval.**

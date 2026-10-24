@@ -1,10 +1,82 @@
 # TreeStory development progress
 
 **Updated:** 2026-10-24  
-**Authorized scope:** Phase 00 only.  
-**Overall state:** `TESTED` for repository and GitHub CI foundation; `BLOCKED` for verification of the real cPanel host. **No production deployment. Phase 01 NOT STARTED.**
+**Authorized scope:** Phase 00 and the separately approved Phase 01. Phase 02 needs explicit new approval.  
+**Overall state:** Phase 00 foundation TESTED, Phase 01 frontend IMPLEMENTED/TESTED with successful static GitHub Pages deployment. **Actual cPanel PHP/MySQL deployment remains BLOCKED and Phase 02 NOT STARTED.**
 
 This document is the source of truth for what was actually implemented. Read root `AGENTS.md` (version 1.1) before making changes.
+
+## 2026-10-24 — Phase 01 / social dashboard frontend
+
+**Status:** IMPLEMENTED + TESTED + STATIC PREVIEW PUBLISHED via GitHub Pages workflow. **No Laravel/MySQL production deployment.**
+
+### Completed
+
+- Approved Phase 01: polished React 19 + TypeScript + Vite social UI with forest/sage design tokens and Lucide icons.
+- Desktop 3-column social shell: left navigation, sticky search/header, central community feed, fixture-derived right sidebar.
+- Mobile layout: responsive single-column feed and five bottom tabs (Home, Explore, Add, Activity, Profile).
+- Screens: Home Feed, canonical Tree Profile with dated photo timeline, individual Photo Update Detail, Add Tree / Existing Tree / Growth Update preview form, stylized non-georeferenced Explore Map, fictional User Profile, Notifications, and Not Found.
+- **One permanent fictional tree ID per tree**, 6 fictional tree profiles, 15 dated post fixtures and consistent authors/comments across cards/routes. Publication order in feed and observation order in timeline are explicitly different.
+- Working **browser-session-only** interactions: filtering, Load More, following, liking, saving, clipboard share where permitted, selecting an observation, simulated comments, species/map selector, demo form confirmation, and notification read state.
+- Safety boundaries clearly labelled: no real GPS collection, real map pin, backend/API call, authentication, persistent user data, upload or media processing. Any selected demo photo file is handled by **filename only**, with no upload or binary storage.
+- Created a tested Vite static build at `preview/phase-01/`, using `HashRouter` so shareable nested Pages links work without rewrite rules. Kept pre-existing root HTML demo, Phase 00 preview and patched PHP 8.4.27+/Laravel 13 backend controls intact.
+- Updated `docs/ui-spec.md`, `docs/decisions.md`, `docs/roadmap.md`, `docs/preview.md` and repository README for this scope.
+
+### Verification — actual GitHub Actions
+
+**Branch build:** [Phase 01 preview run 40089469396](https://github.com/sohailgoheer/punjab-trees/actions/runs/40089469396) **SUCCESS**. Genuine updated `frontend/package-lock.json` generated and locked, then lint/test/typecheck/build passed; the compiled Vite bundle was written into `preview/phase-01/`.
+
+**Pull request:** [PR #1](https://github.com/sohailgoheer/punjab-trees/pull/1) passed required frontend + preserved backend security CI [run 40089783076](https://github.com/sohailgoheer/punjab-trees/actions/runs/40089783076).
+
+**Final merged `main` CI:** [run 40089876277](https://github.com/sohailgoheer/punjab-trees/actions/runs/40089876277) **SUCCESS**.
+
+| Actual command/check | Result |
+|---|---|
+| `cd frontend && npm ci --no-audit --no-fund` | PASS |
+| `cd frontend && npm run lint` | PASS |
+| `cd frontend && npm test` | PASS: **5 Node smoke tests + 15 Vitest/React tests = 20 tests** |
+| `cd frontend && npm run typecheck` | PASS, strict TypeScript |
+| `cd frontend && npm run build` | PASS, production Vite assets built |
+| `cd backend && php scripts/check-php-runtime.php` | PASS: PHP 8.4.27 CI runtime |
+| `cd backend && composer validate --no-check-publish --strict` | PASS |
+| `cd backend && composer install` plus `composer audit` | PASS: no reported security advisories |
+| `cd backend && php artisan test --display-warnings` | PASS: **9 tests / 10 assertions** |
+| `cd backend && ./vendor/bin/phpunit --fail-on-warning --fail-on-deprecation` | PASS |
+| CI HTTP `GET /api/v1/health` | PASS, GitHub runner only |
+
+**Static GitHub Pages deployment:** [run 40089875981](https://github.com/sohailgoheer/punjab-trees/actions/runs/40089875981) **SUCCESS** on the Phase 01 merge commit `fa8e95f0ea6feb957c071b9dc59c4a988096b848`. The nested compiled assets and `preview/phase-01/index.html` are verified in `main`. A separate external HTTP fetch of the Pages site was blocked by this assistant environment; **GitHub reports the Pages deployment succeeded**, but visual QA on an actual user's browser/device has not been independently performed here.
+
+### Preview and usage
+
+- **Phase 01 compiled React preview:** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/
+- Demo tree profile: https://sohailgoheer.github.io/punjab-trees/preview/phase-01/#/trees/01ARZ3NDEKTSV4RRFFQ69G5FAV
+- Demo dated post: https://sohailgoheer.github.io/punjab-trees/preview/phase-01/#/posts/post-neem-oct
+- Separate legacy HTML home: https://sohailgoheer.github.io/punjab-trees/
+- Separate Phase 00 static status page: https://sohailgoheer.github.io/punjab-trees/preview/phase-00/
+- **Codespaces** fallback: `cd frontend && npm ci && npm run dev -- --host 0.0.0.0`, open forwarded port 5173 (requires opening an actual Codespace; no fabricated URL).
+
+### Known issues / current boundaries
+
+- Nothing in Phase 01 saves to MySQL, reads an API, uploads photos, requests GPS, verifies users, sends push notifications or creates a native mobile build. Static preview is NOT a deployed PHP backend.
+- Stylized map uses **illustrative percentage positions**, not latitude/longitude. All people, trees, dates and activity are explicitly fictional. Stock photo links require an internet connection and may not accurately represent stated species.
+- Browser-only likes/follows/saved items/comments/notification read status reset on refresh, as designed.
+- Actual cPanel PHP **CLI and web SAPI**, required PHP extensions, API docroot, MySQL/MariaDB and SSL remain unverified. Strict PHP2Shell patched PHP **8.4.27+ (8.4.x)**, Laravel 13 and security audit gates remain **NO-GO for real deployment** until hosting evidence is supplied.
+- React uses hash URLs for safe branch-based static Pages publishing; this is a deliberate preview tradeoff, not the final decision for SEO/social rich previews.
+- CI tools emitted a non-blocking npm deprecation warning about an ESLint 9 development package; lint/build/tests still passed. Review dependency maintenance at an approved future maintenance milestone.
+- Physical mobile browser UI/screenshot testing was not available through this connector. Responsive breakpoints are implemented in CSS; real-device visual QA is still recommended.
+
+### Git / Phase gate
+
+- Feature branch: `feat/phase-01-social-dashboard`, PR #1 **merged**.
+- Main merge commit: `fa8e95f0ea6feb957c071b9dc59c4a988096b848`.
+- Existing Phase 00 work retained, no force-push, no secrets committed or cPanel deployment attempted.
+- **Phase 01 is complete in implemented/tested static-preview scope. STOP here. Phase 02 is NOT STARTED and requires explicit owner approval.**
+
+### Next suggested task
+
+Only after separate owner approval, plan Phase 02's **MySQL schema and Laravel 13 authentication** against verified patched cPanel PHP (CLI and web) or an isolated patched development host. Do not begin implementation without authorization.
+
+---
 
 ## 2026-10-24 — Phase 00 / secure foundation verification
 

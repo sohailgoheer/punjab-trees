@@ -52,8 +52,10 @@ describe('Phase 01 interactive route smoke tests', () => {
   it('filters sample trees using Explore species dropdown', () => {
     open('/explore');
     fireEvent.change(screen.getByRole('combobox',{name:'Species filter'}),{target:{value:'Neem'}});
-    expect(screen.getByRole('link',{name:/The Little Neem/})).toBeTruthy();
-    expect(screen.queryByRole('link',{name:/Kachnar Corner/})).toBeNull();
+    const resultList = document.querySelector('.explore-results') as HTMLElement;
+    expect(resultList).toBeTruthy();
+    expect(within(resultList).getByRole('link',{name:/The Little Neem/})).toBeTruthy();
+    expect(within(resultList).queryByRole('link',{name:/Kachnar Corner/})).toBeNull();
   });
   it('marks notification samples as read and shows zero unread', () => {
     open('/notifications');

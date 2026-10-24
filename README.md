@@ -23,6 +23,8 @@ Before any PHP deployment, read [PHP2Shell security and upgrade procedure](docs/
 
 ## React frontend — local or Codespaces
 
+Optional one-click Codespaces development configuration: `.devcontainer/devcontainer.json` (Node 22, auto `npm ci`, forwarded port 5173). **It is not a production PHP/cPanel runtime.**
+
 ```bash
 cd frontend
 npm ci

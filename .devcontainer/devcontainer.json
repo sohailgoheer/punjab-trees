@@ -1,0 +1,15 @@
+{
+  "name": "TreeStory Phase 00 (React preview)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22-bookworm",
+  "forwardPorts": [
+    5173
+  ],
+  "portsAttributes": {
+    "5173": {
+      "label": "TreeStory React Phase 00",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "cd frontend && npm ci --no-audit --no-fund",
+  "remoteUser": "node"
+}

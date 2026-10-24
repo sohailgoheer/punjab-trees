@@ -52,3 +52,32 @@ Forward **port 8000** privately and visit `/api/v1/health`. This verifies only t
 The repository currently uses GitHub Pages **Deploy from a branch**, serving the existing root HTML demo plus the Phase 00 static information preview. Per GitHub Docs, **commits made by GitHub Actions using `GITHUB_TOKEN` do not trigger a Pages build**. To avoid falsely claiming automatic React deployment or changing publishing settings without approval, Phase 00 keeps the current Pages source unchanged and provides actual React preview via Codespaces port 5173. An optional approved change to a custom Pages artifact workflow can be considered in a later phase, after preserving all existing public paths.
 
 Official reference: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+
+## Phase 01 — actual compiled React social dashboard
+
+**Intended GitHub Pages URL:** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/
+
+This folder contains **Vite-built React production assets**, unlike the Phase 00 standalone static information page. No PHP backend is involved. It uses React Router's hash paths so its interactive screens load and refresh correctly in GitHub Pages:
+
+- `#/ ` (without the space) Home feed
+- `#/explore` sample map and species filters
+- `#/add-tree` UI-only registration/update form
+- `#/trees/01ARZ3NDEKTSV4RRFFQ69G5FAV` permanent fictional tree profile
+- `#/posts/post-neem-oct` dated observation + comments
+- `#/profile` fictional member profile
+- `#/notifications` fictional activity
+
+**Publishing mechanism:** The scoped `.github/workflows/phase-01-preview.yml` runs on approved Phase 01 feature-branch pushes, resolves a **genuine npm lockfile**, then executes lint, tests, typecheck and build. Only successful builds are copied into `preview/phase-01/` and bot-committed to the feature branch. A subsequent *authorized human/connector merge commit* into `main` triggers the repository's existing **branch-based GitHub Pages** deployment (a `GITHUB_TOKEN` bot commit on its own cannot trigger Pages). The existing root demo and Phase 00 path remain unchanged.
+
+If the Pages deployment is unsuccessful, the complete frontend can still be previewed via Codespaces, using the existing `.devcontainer/devcontainer.json` and forwarded port 5173:
+
+```bash
+cd frontend
+npm ci
+npm run lint
+npm test
+npm run typecheck
+npm run dev -- --host 0.0.0.0
+```
+
+**GitHub Pages is public, read-only hosting**. Phase 01 social actions are transient React state, with no authentication, uploads, GPS, backend API or persistence. The photo stock assets are retrieved over HTTPS from Unsplash when available. Do not mistake the Pages demo for the real deployment to future cPanel hosting.

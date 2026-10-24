@@ -1,16 +1,17 @@
 # TreeStory / Punjab Trees — engineering repository
 
-> **Status (22 October 2026): PHASE 00 — foundation only.** TreeStory is a working title, **not** the final brand.
+> **Status (24 October 2026): Phase 01 responsive dashboard frontend (fictional UI-only data).** TreeStory is a working title, **not** the final brand. Phase 00 PHP/cPanel security controls are preserved.
 
 **Read [AGENTS.md](AGENTS.md) first.** It defines the source of truth, phase gates, product rules, security, privacy and cPanel requirements.
 
 ## What is here
 
-- `frontend/` — a minimal React + TypeScript + Vite foundation page. **No social screens, API integration, registration or persistence** are implemented.
+- `frontend/` — Phase 01 React + TypeScript + Vite **interactive social dashboard**, with strict fictional fixtures, routed screens and session-only UI actions. **No API integration, real auth, uploads, GPS or persistence**.
 - `backend/` — minimal Laravel API **source scaffold** for a health route; install dependencies and run tests before calling it operational.
 - `docs/` — documented architecture, decisions, cPanel checklist, roadmap, current status and safe preview instructions.
 - `index.html`, `post.html`, `app.js`, `styles.css` (repository root) — **legacy public static HTML concept from before Phase 00**. Kept untouched to avoid losing existing work. Browser-local fake post actions are not a backend.
-- `preview/phase-00/index.html` — a separate, explicit **static foundation information preview**, not the compiled React application.
+- `preview/phase-00/index.html` — a separate static foundation information page.
+- `preview/phase-01/` — **actual compiled React/Vite mock UI preview** (created by scoped, tested GitHub Actions build; deployed with an approved merge).
 
 ## Prerequisites
 
@@ -28,6 +29,7 @@ Optional one-click Codespaces development configuration: `.devcontainer/devconta
 ```bash
 cd frontend
 npm ci
+npm run lint
 npm test
 npm run typecheck
 npm run build
@@ -58,7 +60,7 @@ A successful boot should provide `GET /api/v1/health` returning JSON with `data.
 
 - **Existing legacy static concept:** https://sohailgoheer.github.io/punjab-trees/
 - **Phase 00 static information preview (if GitHub Pages deployment succeeds):** https://sohailgoheer.github.io/punjab-trees/preview/phase-00/
-- **Actual React frontend:** Vite dev-server preview via a Codespaces forwarded port; not hosted by GitHub Pages automatically.
+- **Phase 01 React frontend:** https://sohailgoheer.github.io/punjab-trees/preview/phase-01/ (once the successful merge deployment is verified), or Vite dev preview via Codespaces forwarded port 5173.
 - **Complete React + Laravel application:** only through an authorized Codespaces/local frontend + PHP API pair, or later approved cPanel staging. GitHub Pages **cannot run PHP or MySQL**.
 
 See [docs/preview.md](docs/preview.md). No cPanel deployment, production credentials, database migrations or live user features are part of this phase.
@@ -70,4 +72,4 @@ See [docs/preview.md](docs/preview.md). No cPanel deployment, production credent
 - [Architecture](docs/architecture.md) | [Decisions](docs/decisions.md)
 - [Safe hosting and release checklist](docs/deployment-cpanel.md)
 
-**Do not start Phase 01 until the owner approves it.**
+**Phase 01 was explicitly approved. Do not start Phase 02 without the owner's approval.**

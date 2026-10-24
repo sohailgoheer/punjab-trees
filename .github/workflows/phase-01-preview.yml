@@ -1,0 +1,63 @@
+name: Phase 01 preview build (scoped feature branch)
+
+# During this approved phase, build the real React app to a safe nested path.
+# The bot-written build commit does not trigger branch-based GitHub Pages.
+# The authorized merge commit to main will trigger Pages after CI approval.
+on:
+  push:
+    branches:
+      - feat/phase-01-social-dashboard
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/phase-01-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    if: github.ref == 'refs/heads/feat/phase-01-social-dashboard'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Resolve a genuine lockfile from npm registry
+        working-directory: frontend
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Install locked dependencies
+        working-directory: frontend
+        run: npm ci --no-audit --no-fund
+      - name: Lint React and TypeScript
+        working-directory: frontend
+        run: npm run lint
+      - name: Unit and interactive screen tests
+        working-directory: frontend
+        run: npm test
+      - name: TypeScript check
+        working-directory: frontend
+        run: npm run typecheck
+      - name: Build static React app
+        working-directory: frontend
+        run: npm run build
+      - name: Prepare isolated GitHub Pages nested preview directory
+        run: |
+          mkdir -p preview/phase-01
+          find preview/phase-01 -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+          cp -R frontend/dist/. preview/phase-01/
+          test -s preview/phase-01/index.html
+          test -d preview/phase-01/assets
+      - name: Commit verified lockfile and static build to feature branch only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add frontend/package-lock.json preview/phase-01
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: add tested Phase 01 static preview and locked packages'
+            git push origin HEAD:feat/phase-01-social-dashboard
+          fi

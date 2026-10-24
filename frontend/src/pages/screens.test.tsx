@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { AppRoutes } from '../App';
 import { posts, trees } from '../data/fixtures';
@@ -8,12 +8,14 @@ function open(path: string) {
   return render(<MemoryRouter initialEntries={[path]}><AppRoutes/></MemoryRouter>);
 }
 
+afterEach(() => cleanup());
+
 describe('Phase 01 interactive route smoke tests', () => {
   it('opens Home Feed with demo-only posts and a responsive mobile nav', () => {
     open('/');
     expect(screen.getByRole('heading',{ name:/Every tree holds/i })).toBeTruthy();
     expect(screen.getByRole('heading',{ name:/Stories from the ground/i })).toBeTruthy();
-    expect(screen.getByText('Fictional demo data')).toBeTruthy();
+    expect(screen.getByText(/All people, trees and locations are fictional/i)).toBeTruthy();
     expect(screen.getByRole('navigation',{name:'Mobile navigation'})).toBeTruthy();
   });
   it('navigates using mobile Explore tab and displays fictional map warning', () => {

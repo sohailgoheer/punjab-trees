@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, CalendarDays, Camera, Check, CloudUpload, Info, Leaf, MapPin, ShieldCheck, Sprout, TreePine, Trees } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarDays, Camera, Check, CloudUpload, Info, Leaf, MapPin, ShieldCheck, Sprout, Trees } from 'lucide-react';
 import { NoticeTag } from '../components/NoticeTag';
 import { SectionTitle } from '../components/SectionTitle';
 import { getTree } from '../lib/collections';

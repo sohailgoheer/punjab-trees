@@ -5,7 +5,7 @@ import { Avatar } from '../components/Avatar';
 import { NoticeTag } from '../components/NoticeTag';
 import { PostCard } from '../components/PostCard';
 import { people, posts } from '../data/fixtures';
-import { displayDate, getTree, treesForPerson } from '../lib/collections';
+import { displayDate, treesForPerson } from '../lib/collections';
 import { useDemo } from '../state/DemoContext';
 
 type ProfileTab='trees'|'updates'|'saved';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, CalendarDays, Camera, Check, Clock3, Heart, Leaf, MapPin, Plus, ShieldCheck, Sprout } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarDays, Camera, Check, Clock3, Leaf, MapPin, Plus, ShieldCheck, Sprout } from 'lucide-react';
 import { Avatar } from '../components/Avatar';
 import { NoticeTag } from '../components/NoticeTag';
 import { SectionTitle } from '../components/SectionTitle';

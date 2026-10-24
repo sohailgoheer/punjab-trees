@@ -1,4 +1,4 @@
-import { Bookmark, CalendarDays, Heart, MapPin, MessageCircle, MoreHorizontal, Share2, Sprout } from 'lucide-react';
+import { Bookmark, CalendarDays, Heart, MapPin, MessageCircle, MoreHorizontal, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { TreePost } from '../types/models';
 import { commentsForPost, displayDate, getPerson, getTree } from '../lib/collections';
